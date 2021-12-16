@@ -1,0 +1,225 @@
+openapi: "3.0.0"
+info: 
+  title: Api Docs 
+  description: Learn express and swagger - LCO
+  version: 1.0.0
+  contact: 
+    email: kamilanwar2001@gmail.com
+    url: "kamil.digital"
+
+# servers: 
+#   - url: "http://locahost:4000/api/v1"
+#     description: Api local server
+#   - url: "https://locahost:4000/api/v1"
+#     description: Api local server - secure
+
+servers:
+  - url: "{protocol}://localhost:4000/api/{version}"
+    description: for local
+    variables:
+      version:
+        enum:
+          - v1
+          - v2
+        default: v1
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+paths:
+  /lco:
+    get:
+      tags:
+        - String
+      summary: Greets you bish
+      responses:
+        200: 
+          description: all succesful
+          content:
+            application/json:
+              type: string
+              example: "mystring"
+        400:
+          description: bad request
+        500:
+          description: internal server error
+          
+  /lcoobject:
+    get:
+      tags:
+        - Object
+      summary: Get a single course data as object
+      responses:
+        200:
+          description: all succesful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: 
+                    type: string
+                  name:
+                    type: string
+                  price:
+                    type: number
+               
+  /courses:
+    get:
+      tags:
+        - Array
+      summary: Sends an array of courses
+      responses:
+        200: 
+          description: all succesful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    price:
+                      type: number
+        400:
+          description: bad request
+        500:
+          description: internal server error
+
+  /mycourse/{courseId}:
+    get:
+      tags:
+        - String
+      summary: Sends course based on Id passes
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          default: 22
+          schema:
+            type: string
+      responses:
+        200: 
+          description: all succesful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  price:
+                    type: number
+        400:
+          description: bad request
+        500:
+          description: internal server error
+  
+  /addCourse:
+    post:
+      tags:
+        - String
+      summary: add a new course to courses
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      
+      responses:
+        200: 
+          description: all succesful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  price:
+                    type: number
+        400:
+          description: bad request
+        500:
+          description: internal server error
+
+  /coursequery:
+    get:
+      tags:
+        - String
+      summary: Trying to learn about query
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [delhi,london,jaipur]
+        - name: device
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [mobile,web]
+      responses:
+        200: 
+          description: all succesful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  location:
+                    type: string
+                  device:
+                    type: string
+        400:
+          description: bad request
+        500:
+          description: internal server error
+  
+  /fileUpload:
+    post:
+      tags:
+        - String
+      summary: Uploading course image
+      parameters:
+        - in: header
+          name: auth
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+
+      responses:
+        200: 
+          description: all succesful
+          
+        400:
+          description: bad request
+        500:
+          description: internal server error
